@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html style="height: 90%; width: 100%" xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+   <head>
+       <meta charset="utf-8">
+       <!-- layui -->
+    <link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}"  media="all"/>
+    <script type="text/javascript" th:src="@{/plug/layui/layui.js}"  charset="utf-8"></script>
+   </head>
+   <body style="height: 90%;width: 100%; margin: 0">
+       <script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}"></script>
+       <script type="text/javascript" th:src="@{/js/echarts/echarts.js}"></script>
+        <div id="container" style="height: 90%;width: 100%"></div>
+   </body>
+</html>
+
+<script type="text/javascript" th:inline="javascript">
+
+  var names = [[${names}]];
+  var toDoCounts = [[${zc}]];
+  var outTimeCount = [[${tq}]];
+  var aheadCount = [[${cd}]];
+
+  layui.use('laydate', function(){
+      var laydate = layui.laydate;
+      //年月选择器
+      laydate.render({
+       elem: '#test1'
+       ,type: 'month',
+       value: new Date()
+      });
+      //年月选择器
+      laydate.render({
+       elem: '#test2'
+       ,type: 'month',
+       value: new Date()
+      });
+  });
+
+  var dom = document.getElementById("container");
+  var myChart = echarts.init(dom);
+  var app = {};
+  option = null;
+
+  function fulshEchart(names, toDoCounts, outTimeCount, aheadCount){
+      var n = new Array();
+        n[0] = "user";
+        for (var i = 0; i <  names.length; i++) {
+          n[i+1] = names[i];
+        }
+
+        var t = new Array();
+        t[0] = "正常签到个数";
+        for (var i = 0; i <  toDoCounts.length; i++) {
+          t[i+1] = toDoCounts[i];
+        }
+
+        var o = new Array();
+        o[0] = "提前签到个数";
+        for (var i = 0; i <  outTimeCount.length; i++) {
+          o[i+1] = outTimeCount[i];
+        }
+
+        var a = new Array();
+        a[0] = "迟到签到个数";
+        for (var i = 0; i <  aheadCount.length; i++) {
+          a[i+1] = aheadCount[i];
+      }
+
+      setTimeout(function () {
+          option = {
+              legend: {},
+              tooltip: {
+                  trigger: 'axis',
+                  showContent: false
+              },
+              dataset: {
+                  source: [
+                      n,
+                      o,
+                      a,
+                      t
+                  ]
+              },
+              xAxis: {type: 'category'},
+              yAxis: {gridIndex: 0},
+              grid: {top: '55%'},
+              series: [
+                  {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                  {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                  {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                  {type: 'line', smooth: true, seriesLayoutBy: 'row'},
+                  {
+                      type: 'pie',
+                      id: 'pie',
+                      radius: '30%',
+                      center: ['50%', '25%'],
+                      label: {
+                          formatter: '{b}: {@2012} ({d}%)'
+                      },
+                      encode: {
+                          itemName: 'user',
+                          value: '2012',
+                          tooltip: '2012'
+                      }
+                  }
+              ]
+          };
+
+          myChart.on('updateAxisPointer', function (event) {
+              var xAxisInfo = event.axesInfo[0];
+              if (xAxisInfo) {
+                  var dimension = xAxisInfo.value + 1;
+                  myChart.setOption({
+                      series: {
+                          id: 'pie',
+                          label: {
+                              formatter: '{b}: {@[' + dimension + ']} ({d}%)'
+                          },
+                          encode: {
+                              value: dimension,
+                              tooltip: dimension
+                          }
+                      }
+                  });
+              }
+          });
+
+          myChart.setOption(option);
+
+      });
+      if (option && typeof option === "object") {
+          myChart.setOption(option, true);
+      }
+  }
+
+  $(function(){
+    fulshEchart(names, toDoCounts, outTimeCount, aheadCount);
+  });
+
+
+</script>

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bskms.mapper.ChildrenMapper">
+  <resultMap id="BaseResultMap" type="com.bskms.bean.Children">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="birthday" jdbcType="DATE" property="birthday" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="hobby" jdbcType="VARCHAR" property="hobby" />
+    <result column="food" jdbcType="VARCHAR" property="food" />
+    <result column="entrance" jdbcType="TIMESTAMP" property="entrance" />
+    <result column="className" jdbcType="VARCHAR" property="className" />
+    <result column="userId" jdbcType="VARCHAR" property="userId" />
+    <result column="childrenId" jdbcType="INTEGER" property="childrenId" />
+    <result column="isFaMa" jdbcType="INTEGER" property="isFaMa" />
+    <result column="isJinji" jdbcType="INTEGER" property="isJinji" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, name, sex, birthday, class_id, hobby, food, entrance
+  </sql>
+  <select id="selectByExample" parameterType="com.bskms.bean.ChildrenExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from children
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from children
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from children
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bskms.bean.ChildrenExample">
+    delete from children
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bskms.bean.Children" useGeneratedKeys="true" keyProperty="id">
+    insert into children (id, name, sex, 
+      birthday, class_id, hobby, 
+      food, entrance)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, 
+      #{birthday,jdbcType=DATE}, #{classId,jdbcType=INTEGER}, #{hobby,jdbcType=VARCHAR}, 
+      #{food,jdbcType=VARCHAR}, #{entrance,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bskms.bean.Children">
+    insert into children
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="classId != null">
+        class_id,
+      </if>
+      <if test="hobby != null">
+        hobby,
+      </if>
+      <if test="food != null">
+        food,
+      </if>
+      <if test="entrance != null">
+        entrance,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="classId != null">
+        #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="hobby != null">
+        #{hobby,jdbcType=VARCHAR},
+      </if>
+      <if test="food != null">
+        #{food,jdbcType=VARCHAR},
+      </if>
+      <if test="entrance != null">
+        #{entrance,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bskms.bean.ChildrenExample" resultType="java.lang.Long">
+    select count(*) from children
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update children
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null">
+        sex = #{record.sex,jdbcType=INTEGER},
+      </if>
+      <if test="record.birthday != null">
+        birthday = #{record.birthday,jdbcType=DATE},
+      </if>
+      <if test="record.classId != null">
+        class_id = #{record.classId,jdbcType=INTEGER},
+      </if>
+      <if test="record.hobby != null">
+        hobby = #{record.hobby,jdbcType=VARCHAR},
+      </if>
+      <if test="record.food != null">
+        food = #{record.food,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entrance != null">
+        entrance = #{record.entrance,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update children
+    set id = #{record.id,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=INTEGER},
+      birthday = #{record.birthday,jdbcType=DATE},
+      class_id = #{record.classId,jdbcType=INTEGER},
+      hobby = #{record.hobby,jdbcType=VARCHAR},
+      food = #{record.food,jdbcType=VARCHAR},
+      entrance = #{record.entrance,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bskms.bean.Children">
+    update children
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="classId != null">
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="hobby != null">
+        hobby = #{hobby,jdbcType=VARCHAR},
+      </if>
+      <if test="food != null">
+        food = #{food,jdbcType=VARCHAR},
+      </if>
+      <if test="entrance != null">
+        entrance = #{entrance,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bskms.bean.Children">
+    update children
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      birthday = #{birthday,jdbcType=DATE},
+      class_id = #{classId,jdbcType=INTEGER},
+      hobby = #{hobby,jdbcType=VARCHAR},
+      food = #{food,jdbcType=VARCHAR},
+      entrance = #{entrance,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getAllStudentByLimit" parameterType="com.bskms.bean.Children" resultMap="BaseResultMap">
+	  select stu.*,cla.name className from children stu
+	  left join classes cla on stu.class_id=cla.id
+	  where 1=1
+	  <if test="name!=null and name!=''">
+				and stu.name like concat('%',#{name},'%')
+	 </if>
+	  <if test="className!=null and className!=''">
+				and cla.id like concat('%',#{className},'%')
+	 </if>
+	   <if test="limit!=null">
+			limit #{page}, #{limit}
+	  </if>
+  </select>
+  
+   <select id="countAllStudentByLimit" parameterType="com.bskms.bean.Children" resultType="int">
+	  select count(*) from children stu
+	  left join classes cla on stu.class_id=cla.id
+	  where 1=1
+	   <if test="name!=null and name!=''">
+				and stu.name like concat('%',#{name},'%')
+	 </if>
+	  <if test="className!=null and className!=''">
+				and cla.id like concat('%',#{className},'%')
+	 </if>
+  </select>
+  
+  <select id="getChildrens" parameterType="java.lang.String" resultMap="BaseResultMap">
+	SELECT c.*
+	FROM children c
+	LEFT JOIN user_children uc 
+	on c.id = uc.children_id
+	WHERE uc.user_id = #{uId,jdbcType=VARCHAR}
+  </select>
+</mapper>

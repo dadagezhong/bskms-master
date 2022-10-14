@@ -1,0 +1,344 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>增加学生</title>
+<link type="text/css" rel="stylesheet" th:href="@{/css/page.css}" />
+<script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}" ></script>
+<!-- validation -->
+<script type="text/javascript" th:src="@{/js/jquery/jquery.validate.js}" ></script>
+<!-- layer -->
+<link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}" />
+<script type="text/javascript" th:src="@{/plug/layui/layui.js}"  charset="utf-8"></script>
+
+<link type="text/css" rel="stylesheet" th:href="@{/js/layer/skin/layer.css}"/>
+<script type="text/javascript" th:src="@{/js/layer/layer.js}" ></script>
+
+<style type="text/css">
+
+.need_span{
+	color: red;
+	display: none;
+}
+.need_0, .validation_span{
+	color: red;
+}
+.need_1{
+	color: #666666;
+}
+.input_0{
+	width: 200px;
+}
+.form_table td{
+	padding: 5px;
+}
+.text_ad_0{
+	font-weight: bold;
+	color: #444444;
+	white-space: nowrap;
+}
+</style>
+
+<script type="text/javascript"  th:inline="javascript">
+
+layui.use('laydate', function(){
+	  var laydate = layui.laydate;
+	  
+	  //执行一个laydate实例
+	  laydate.render({
+	    elem: '#birthday' //指定元素
+	  });
+	  laydate.render({
+		elem: '#entrance' //指定元素
+	 });
+});
+
+function getTime(val){
+	if(val){		
+		val = val.split("T");
+		return val[0]; 
+	}
+	return "";
+}
+	
+var manageStu = [[${manageStu}]];
+var cla = [[${cla}]];
+var user = [[${user}]];
+var us = [[${uc}]];
+
+console.log(manageStu);
+console.log(cla);
+console.log(user);
+console.log(us);
+
+$(function(){
+	$(".re_password").hide();
+	if(cla){
+		 for(var i=0;i<cla.length;i++){
+			$("#classId").append("<option value='"+cla[i].id+"'>"+cla[i].name+"</option>");
+		 }
+	}
+	if(user){
+		 for(var i=0;i<user.length;i++){
+			$("#userId").append("<option value='"+user[i].userId+"'>"+user[i].userName+"</option>");
+		 }
+	}
+   	if(manageStu){
+   		console.log(manageStu);
+   		//修改
+   		$(".top_page_name").text("修改学生");
+   		
+   		//回填值
+   		$("#name").val(manageStu.name);
+   		$(":radio[name='sex'][value='"+manageStu.sex+"']").attr("checked", "checked");
+   		$("#classId option[value='"+manageStu.classId+"']").attr("selected","selected");
+   		$("#birthday").val(manageStu.birthday.split("T")[0]);
+   		$("#hobby").val(manageStu.hobby);
+   		$("#food").val(manageStu.food);
+   		$("#id").val(manageStu.id);
+   		console.log(manageStu.id);
+   		$("#entrance").val(manageStu.entrance.split("T")[0]);
+   		if(us){
+	   		$("#userId option[value='"+us.userId+"']").attr("selected","selected");
+	   		
+	   		$(":radio[name='isFaMa'][value='"+us.isFaMa+"']").attr("checked", "checked");
+	   		$(":radio[name='isJinji'][value='"+us.isJinji+"']").attr("checked", "checked");
+   		}
+   	}
+	
+	//开始验证     
+	$('form').validate({
+		
+	    submitHandler: function (){
+	    	save();
+	    }
+	});
+	
+	//返回按钮
+	$("#backBtu").click(function(){
+		layer.confirm('确认返回吗？', {icon: 3, title:'提示'}, function(index){
+		    parent.layer.closeAll();
+		});
+	});
+});
+
+function closeSelf(){
+    var i = layer.getFrameIndex();
+	layer.close(i);
+}
+
+//保存
+function save(){
+	var param = new Object();
+	param.name = $.trim($("#name").val());
+	param.sex = $(":radio[name='sex']:checked").val();
+	var time = $("#birthday").val();
+	if(time!=null && time!=''){		
+		time = time.split('-');
+		var myTime = new Date(time[0],(time[1]-1),time[2]);
+		
+		param.birthday = myTime;
+	}
+	var time1 = $("#entrance").val();
+	if(time1!=null && time1!=''){		
+		time1 = time1.split('-');
+		var myTime = new Date(time1[0],(time1[1]-1),time1[2]);
+		
+		param.entrance = myTime;
+	}
+	param.classId = $.trim($("#classId").val());
+	param.hobby = $.trim($("#hobby").val());
+	param.food = $.trim($("#food").val());
+	
+	param.userId = $.trim($("#userId").val());
+	param.isFaMa = $(":radio[name='isFaMa']:checked").val();
+	param.isJinji = $(":radio[name='isJinji']:checked").val();
+	var urlStr = "/ls/addStu";
+	
+	if(manageStu){
+		//修改
+		if(us){			
+			param.ucId = us.id;
+			param.id = manageStu.id;
+		}
+		urlStr = "/ls/updateStudent";
+	}
+	if(param.name=="" || param.sex==""|| param.birthday==""|| param.entrance==""|| 
+			param.classId==""|| param.hobby==""|| param.food==""|| param.userId==""|| 
+			param.isFaMa==""|| param.isJinji==""){
+		layer.confirm('请填写必填项!', {icon: 2, title:'提示'});
+	}else{
+	layer.confirm('确认保存吗？', {icon: 3, title:'提示'}, function(index){
+		$.ajax({
+    		type:"POST",
+    		async:true,  //默认true,异步
+    		data:param,
+    		url:urlStr,
+    		success:function(data){
+    			if(data == "SUCCESS"){
+    				layer.alert('保存成功！', {icon: 1}, function(indexOk){
+       					parent.search();
+       	    			parent.$("#add_iframe iframe").attr("src", "");
+       			    	parent.$("div").first().show();
+       			    	parent.$("#add_iframe").hide();
+       			    	parent.layer.closeAll();
+       				});
+    			}else if(data == "LGINOUT"){
+    				//重新登录
+    				parent.window.location.href = "/logout";    				
+    			}else{
+    				layer.alert('保存失败！', {icon: 2}, function(indexNo){
+    					parent.layer.closeAll();
+       				});
+    			}
+    	    }
+    	});
+	});
+	}
+}
+
+</script>
+</head>
+<body>
+<div  style="margin-left:15px; height: 400px;">
+<div class="first_div" style="border:none;">
+	<div id="adListDiv" align="left" >
+	<form>
+		<table class="form_table" style="border-collapse: collapse;margin-left:20px;margin-top:10px;">
+		<input id="id" type="text" name="id" class="input_0" hidden="true" />
+		    <tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">姓名：</span>
+				</td>
+				<td>
+					<input id="name" type="text" name="name" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">性别：</span>
+				</td>
+				<td>
+					<input type="radio" id="sex1" name="sex" value="1" checked="checked" style="vertical-align:middle;" />
+					<span style="vertical-align:middle;" >男</span>
+					<input type="radio" id="sex2" name="sex" value="0" style="margin-left:10px;vertical-align:middle;" />
+					<span style="vertical-align:middle;" >女</span>
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">班级：</span>
+				</td>
+				<td>
+					 <div class="layui-input-inline">
+					        <select id="classId" name="classId" lay-filter="classId" lay-verify="required" lay-search="" class="layui-form">
+					         	<option value="" selected="selected">---请选择班级---</option>
+					        </select>
+		      		</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">出生日期：</span>
+				</td>
+				<td>
+					<input id="birthday" type="text" name="birthday" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">兴趣爱好：</span>
+				</td>
+				<td>
+					<input id="hobby" type="text" name="hobby" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">过敏因素：</span>
+				</td>
+				<td>
+					<input id="food" type="text" name="food" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">入学时间：</span>
+				</td>
+				<td>
+					<input id="entrance" type="text" name="entrance" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">家长：</span>
+				</td>
+				<td>
+					 <div class="layui-input-inline">
+					        <select id="userId" name="userId" lay-filter="userId" lay-verify="required" lay-search="" class="layui-form">
+					         	<option value="" selected="selected">---请选择家长---</option>
+					        </select>
+		      		</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">亲属：</span>
+				</td>
+				<td>
+					<input type="radio" id="isFaMa1" name="isFaMa" value="1" checked="checked" style="vertical-align:middle;" />
+					<span style="vertical-align:middle;" >父亲</span>
+					<input type="radio" id="isFaMa2" name="isFaMa" value="0" style="margin-left:10px;vertical-align:middle;" />
+					<span style="vertical-align:middle;" >母亲</span>
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">紧急联系人：</span>
+				</td>
+				<td>
+					<input type="radio" id="isJinji1" name="isJinji" value="1" checked="checked" style="vertical-align:middle;" />
+					<span style="vertical-align:middle;" >是</span>
+					<input type="radio" id="isJinji1" name="isJinji" value="0" style="margin-left:10px;vertical-align:middle;" />
+					<span style="vertical-align:middle;" >否</span>
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="left" >
+					<div style="margin-top:10px;margin-bottom:20px;margin-left:120px;">
+						<input type="submit" class="layui-btn" lay-submit="" lay-filter="add" id="saveBtu" name="saveBtu" value="保存" style="" />
+						<input type="button" class="layui-btn" lay-submit="" lay-filter="add" id="backBtu" name="backBtu" value="返回" style="margin-left:20px;" />
+					</div>
+				</td>
+			</tr>
+		</table>
+	</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

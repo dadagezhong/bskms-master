@@ -1,0 +1,82 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>老师考勤管理</title>
+<link type="text/css" rel="stylesheet" th:href="@{/css/page.css}"/>
+<script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}"></script>
+<!-- mmGrid -->
+<link rel="stylesheet" type="text/css" th:href="@{/plug/mmGrid/mmGrid.css}"/>
+<script type="text/javascript"  th:src="@{/plug/mmGrid/mmGrid.js}" ></script>
+<!-- mmGrid page -->
+<link rel="stylesheet" type="text/css" th:href="@{/plug/mmGrid/mmPaginator.css}"/>
+<script type="text/javascript" th:src="@{/plug/mmGrid/mmPaginator.js}" ></script>
+
+<!-- layer -->
+<link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}"  media="all"/>
+<script type="text/javascript" th:src="@{/plug/layui/layui.js}"  charset="utf-8"></script>
+
+<link type="text/css" rel="stylesheet" th:href="@{/js/layer/skin/layer.css}"/>
+<script type="text/javascript" th:src="@{/js/layer/layer.js}" ></script>
+<style type="text/css">
+</style>
+
+</head>
+<body>
+<div  lay-allowclose="true" style="margin-left:15px; width: 98%">
+<div class="first_div" style="border:none;">
+	
+		
+			  <button class="layui-btn" onclick="qianDao()">签到</button>
+			  <button class="layui-btn" onclick="qianTui()">签退</button>
+	
+</div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+function qianDao(){
+	    var param = {"type":1};
+    	$.ajax({
+    		type:"POST",
+    		async:true,  //默认true,异步
+    		data:param,
+    		url:"/ls/addSign",
+    		success:function(data){
+    			if(data == "SUCCESS"){
+    				layer.alert('签到成功！', {icon: 1}, function(indexOk){
+    					layer.close(indexOk);
+       				});
+    			}else{
+    				layer.alert('签到失败！', {icon: 2}, function(indexNo){
+       					layer.close(indexNo);
+       				});
+    			}
+    	    }
+    	});
+	}
+
+function qianTui(){
+    var param = {"type":1};
+	$.ajax({
+		type:"POST",
+		async:true,  //默认true,异步
+		data:param,
+		url:"/ls/addQianTui",
+		success:function(data){
+			if(data == "SUCCESS"){
+				layer.alert('签退成功！', {icon: 1}, function(indexOk){
+					layer.close(indexOk);
+   				});
+			}else{
+				layer.alert('签退失败！', {icon: 2}, function(indexNo){
+   					layer.close(indexNo);
+   				});
+			}
+	    }
+	});
+}
+
+</script>

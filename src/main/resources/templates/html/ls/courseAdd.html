@@ -1,0 +1,284 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>增加课程</title>
+<link type="text/css" rel="stylesheet" th:href="@{/css/page.css}" />
+<script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}" ></script>
+<!-- validation -->
+<script type="text/javascript" th:src="@{/js/jquery/jquery.validate.js}" ></script>
+<!-- layer -->
+<link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}" />
+<script type="text/javascript" th:src="@{/plug/layui/layui.js}"  charset="utf-8"></script>
+
+<link type="text/css" rel="stylesheet" th:href="@{/js/layer/skin/layer.css}"/>
+<script type="text/javascript" th:src="@{/js/layer/layer.js}" ></script>
+
+<style type="text/css">
+
+.need_span{
+	color: red;
+	display: none;
+}
+.need_0, .validation_span{
+	color: red;
+}
+.need_1{
+	color: #666666;
+}
+.input_0{
+	width: 200px;
+}
+.form_table td{
+	padding: 5px;
+}
+.text_ad_0{
+	font-weight: bold;
+	color: #444444;
+	white-space: nowrap;
+}
+</style>
+
+<script type="text/javascript"  th:inline="javascript">
+
+layui.use('laydate', function(){
+	  var laydate = layui.laydate;
+	    //日期时间选择器
+	  laydate.render({
+	    elem: '#start'
+	    ,type: 'datetime'
+	  });
+	    //日期时间选择器
+  laydate.render({
+    elem: '#end'
+    ,type: 'datetime'
+  });
+
+});
+
+function getTime(val){
+	if(val){		
+		val = val.split("T");
+		return val[0]; 
+	}
+	return "";
+}
+	
+var cla = [[${cla}]];
+var tea = [[${users}]];
+
+$(function(){
+	$(".re_password").hide();
+	if(cla){
+		 for(var i=0;i<cla.length;i++){
+			$("#classId").append("<option value='"+cla[i].id+"'>"+cla[i].name+"</option>");
+		 }
+	}
+	
+	if(tea){
+		 for(var i=0;i<tea.length;i++){
+			$("#teaName").append("<option value='"+tea[i].userId+"'>"+tea[i].userName+"</option>");
+		 }
+	}
+	
+	//开始验证     
+	$('form').validate({
+		
+	    submitHandler: function (){
+	    	save();
+	    }
+	});
+	
+	//返回按钮
+	$("#backBtu").click(function(){
+		layer.confirm('确认返回吗？', {icon: 3, title:'提示'}, function(index){
+		    parent.layer.closeAll();
+		});
+	});
+});
+
+function closeSelf(){
+    var i = layer.getFrameIndex();
+	layer.close(i);
+}
+
+function getDate(d){
+		// 给Number原型添加左边补位函数
+	Number.prototype.padLeft = function(lng, chr) {
+	    if (!lng) lng = 0;
+	    if (!chr) chr = '0';
+	    var vStr = this.toString();
+	    
+	    if (vStr.length > lng) {
+	        return vStr.substring(vStr.length - lng,vStr.length);
+	    } else if (vStr.length < lng) {
+	        var tnum = Math.pow(10,lng - vStr.length).toString();
+	        return tnum.substring(1, tnum.length).replace("0",chr) + this.toString();
+	    }
+	    return this.toString();
+	};
+	// 给Date原型添加转化成字符串格式yyyy-MM-dd HH:mm:ss函数
+	Date.prototype.toMyStr = function() {
+	     return this.getFullYear()
+	        + '-' + (this.getMonth() + 1).padLeft(2)
+	        + '-' + this.getDate().padLeft(2)
+	        + ' ' + this.getHours().padLeft(2)
+	        + ':' + this.getMinutes().padLeft(2) 
+	        + ':' + this.getSeconds().padLeft(2);
+	};
+
+	// 使用示例
+	// 日期字符串中含有空格能字符，HTML页面传递日期字符串时可以先用encodeURIComponent编码，在接收页面再用decodeURIComponent解码
+	var timeStr = '2015-09-07 13:40:36';
+	var ct = new Date(timeStr.replace(/-/g, '/'));
+	var addHours = 13;
+	ct.setHours(ct.getHours() + addHours);
+	console.log(ct.toMyStr());
+}
+
+//保存
+function save(){
+	var param = new Object();
+	param.name = $.trim($("#name").val());
+	param.teaName = $.trim($("#teaName").val());
+	param.start = new Date($.trim($("#start").val()).replace(/-/g, '/'));
+	param.end = new Date($.trim($("#end").val()).replace(/-/g, '/'));
+	param.step = $.trim($("#step").val());
+	param.amPm = $(":radio[name='amPm']:checked").val();
+	param.classId = $.trim($("#classId").val());
+	var urlStr = "/ls/addCourse";
+	
+	if(param.name=="" || param.teaName==""|| param.start==""|| param.end==""|| param.step==""|| param.amPm==""|| param.classId==""){
+		layer.confirm('请填写必填项!', {icon: 2, title:'提示'});
+	}else{
+	
+	layer.confirm('确认保存吗？', {icon: 3, title:'提示'}, function(index){
+		$.ajax({
+    		type:"POST",
+    		async:true,  //默认true,异步
+    		data:param,
+    		url:urlStr,
+    		success:function(data){
+    			console.log(data);
+    			if(data == "SUCCESS"){
+    				layer.alert('保存成功！', {icon: 1}, function(indexOk){
+       					parent.search();
+       	    			parent.$("#add_iframe iframe").attr("src", "");
+       			    	parent.$("div").first().show();
+       			    	parent.$("#add_iframe").hide();
+       			    	parent.layer.closeAll();
+       				});
+    			}else if(data == "LGINOUT"){
+    				//重新登录
+    				parent.window.location.href = "/logout";    				
+    			}else{
+    				layer.alert('保存失败！', {icon: 2}, function(indexNo){
+    					parent.layer.closeAll();
+       				});
+    			}
+    	    }
+    	});
+	});
+	}
+}
+
+</script>
+</head>
+<body>
+<div  style="margin-left:15px; height: 400px;">
+<div class="first_div" style="border:none;">
+	<div id="adListDiv" align="left" >
+	<form>
+		<table class="form_table" style="border-collapse: collapse;margin-left:20px;margin-top:10px;">
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">课程名：</span>
+				</td>
+				<td>
+					<input id="name" type="text" name="name" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">班级：</span>
+				</td>
+				<td>
+					 <div class="layui-input-inline">
+					        <select id="classId" name="classId" lay-filter="classId" lay-verify="required" lay-search="" class="layui-form">
+					         	<option value="" selected="selected">---请选择班级---</option>
+					        </select>
+		      		</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">老师名：</span>
+				</td>
+				<td>
+					<input id="teaName" type="text" name="teaName" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">开始时间：</span>
+				</td>
+				<td>
+					<input type="text" class="layui-input" id="start" placeholder="yyyy-MM-dd HH:mm:ss">
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">结束时间：</span>
+				</td>
+				<td>
+					<input type="text" class="layui-input" id="end" placeholder="yyyy-MM-dd HH:mm:ss">
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">节次：</span>
+				</td>
+				<td>
+					<input id="step" type="text" name="step" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">上午下午：</span>
+				</td>
+				<td>
+					<input type="radio" id="userSex1" name="amPm" value="1" checked="checked" style="vertical-align:middle;" />
+					<span style="vertical-align:middle;" >上午</span>
+					<input type="radio" id="userSex2" name="amPm" value="0" style="margin-left:10px;vertical-align:middle;" />
+					<span style="vertical-align:middle;" >下午</span>
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="left" >
+					<div style="margin-top:10px;margin-bottom:20px;margin-left:120px;">
+						<input type="submit" class="layui-btn" lay-submit="" lay-filter="add" id="saveBtu" name="saveBtu" value="保存" style="" />
+						<input type="button" class="layui-btn" lay-submit="" lay-filter="add" id="backBtu" name="backBtu" value="返回" style="margin-left:20px;" />
+					</div>
+				</td>
+			</tr>
+		</table>
+	</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

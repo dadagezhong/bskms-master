@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bskms.mapper.FootMapper">
+  <resultMap id="BaseResultMap" type="com.bskms.bean.Foot">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="breakfast_desc" jdbcType="VARCHAR" property="breakfastDesc" />
+    <result column="breakfast" jdbcType="VARCHAR" property="breakfast" />
+    <result column="lunch_desc" jdbcType="VARCHAR" property="lunchDesc" />
+    <result column="lunch" jdbcType="VARCHAR" property="lunch" />
+    <result column="dinner" jdbcType="VARCHAR" property="dinner" />
+    <result column="dinner_desc" jdbcType="VARCHAR" property="dinnerDesc" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, breakfast_desc, breakfast, lunch_desc, lunch, dinner, dinner_desc, create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.bskms.bean.FootExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from `foot`
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from `foot`
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from `foot`
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bskms.bean.FootExample">
+    delete from `foot`
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bskms.bean.Foot">
+    insert into `foot` (id, breakfast_desc, breakfast, 
+      lunch_desc, lunch, dinner, 
+      dinner_desc, create_time)
+    values (#{id,jdbcType=INTEGER}, #{breakfastDesc,jdbcType=VARCHAR}, #{breakfast,jdbcType=VARCHAR}, 
+      #{lunchDesc,jdbcType=VARCHAR}, #{lunch,jdbcType=VARCHAR}, #{dinner,jdbcType=VARCHAR}, 
+      #{dinnerDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bskms.bean.Foot">
+    insert into `foot`
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="breakfastDesc != null">
+        breakfast_desc,
+      </if>
+      <if test="breakfast != null">
+        breakfast,
+      </if>
+      <if test="lunchDesc != null">
+        lunch_desc,
+      </if>
+      <if test="lunch != null">
+        lunch,
+      </if>
+      <if test="dinner != null">
+        dinner,
+      </if>
+      <if test="dinnerDesc != null">
+        dinner_desc,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="breakfastDesc != null">
+        #{breakfastDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="breakfast != null">
+        #{breakfast,jdbcType=VARCHAR},
+      </if>
+      <if test="lunchDesc != null">
+        #{lunchDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="lunch != null">
+        #{lunch,jdbcType=VARCHAR},
+      </if>
+      <if test="dinner != null">
+        #{dinner,jdbcType=VARCHAR},
+      </if>
+      <if test="dinnerDesc != null">
+        #{dinnerDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bskms.bean.FootExample" resultType="java.lang.Long">
+    select count(*) from `foot`
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update `foot`
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.breakfastDesc != null">
+        breakfast_desc = #{record.breakfastDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.breakfast != null">
+        breakfast = #{record.breakfast,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lunchDesc != null">
+        lunch_desc = #{record.lunchDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lunch != null">
+        lunch = #{record.lunch,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dinner != null">
+        dinner = #{record.dinner,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dinnerDesc != null">
+        dinner_desc = #{record.dinnerDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update `foot`
+    set id = #{record.id,jdbcType=INTEGER},
+      breakfast_desc = #{record.breakfastDesc,jdbcType=VARCHAR},
+      breakfast = #{record.breakfast,jdbcType=VARCHAR},
+      lunch_desc = #{record.lunchDesc,jdbcType=VARCHAR},
+      lunch = #{record.lunch,jdbcType=VARCHAR},
+      dinner = #{record.dinner,jdbcType=VARCHAR},
+      dinner_desc = #{record.dinnerDesc,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bskms.bean.Foot">
+    update `foot`
+    <set>
+      <if test="breakfastDesc != null">
+        breakfast_desc = #{breakfastDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="breakfast != null">
+        breakfast = #{breakfast,jdbcType=VARCHAR},
+      </if>
+      <if test="lunchDesc != null">
+        lunch_desc = #{lunchDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="lunch != null">
+        lunch = #{lunch,jdbcType=VARCHAR},
+      </if>
+      <if test="dinner != null">
+        dinner = #{dinner,jdbcType=VARCHAR},
+      </if>
+      <if test="dinnerDesc != null">
+        dinner_desc = #{dinnerDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bskms.bean.Foot">
+    update `foot`
+    set breakfast_desc = #{breakfastDesc,jdbcType=VARCHAR},
+      breakfast = #{breakfast,jdbcType=VARCHAR},
+      lunch_desc = #{lunchDesc,jdbcType=VARCHAR},
+      lunch = #{lunch,jdbcType=VARCHAR},
+      dinner = #{dinner,jdbcType=VARCHAR},
+      dinner_desc = #{dinnerDesc,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllFootByLimit" parameterType="com.bskms.bean.Foot" resultMap="BaseResultMap">
+   select * from foot
+   WHERE 1=1
+   <if test="startTime!=null and startTime!=''">
+		and create_time &gt; #{startTime,jdbcType=TIMESTAMP}
+	</if>
+	<if test="endTime!=null and endTime!=''">
+		and create_time &lt; #{endTime,jdbcType=TIMESTAMP}
+	</if>
+     <if test="limit!=null">
+			limit #{page}, #{limit}
+	</if>
+  </select>
+  
+   <select id="countAllFootByLimit" parameterType="com.bskms.bean.Foot" resultType="int">
+     select count(*) from foot
+   WHERE 1=1
+   <if test="startTime!=null and startTime!=''">
+		and create_time &gt; #{startTime,jdbcType=TIMESTAMP}
+	</if>
+	<if test="endTime!=null and endTime!=''">
+		and create_time &lt; #{endTime,jdbcType=TIMESTAMP}
+	</if>
+  </select>
+  
+  <select id="getNowFoot" parameterType="java.lang.String" resultMap="BaseResultMap">
+   	SELECT * 
+	FROM foot 
+	WHERE create_time &gt;= #{s,jdbcType=TIMESTAMP}
+	AND create_time &lt;= #{e,jdbcType=TIMESTAMP}
+  </select>
+</mapper>

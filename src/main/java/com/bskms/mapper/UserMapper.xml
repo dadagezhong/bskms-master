@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bskms.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.bskms.bean.User">
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_tel" jdbcType="VARCHAR" property="userTel" />
+    <result column="user_mail" jdbcType="VARCHAR" property="userMail" />
+    <result column="position" jdbcType="VARCHAR" property="position" />
+    <result column="dept" jdbcType="VARCHAR" property="dept" />
+    <result column="user_state" jdbcType="INTEGER" property="userState" />
+    <result column="user_birthday" jdbcType="DATE" property="userBirthday" />
+    <result column="user_sex" jdbcType="INTEGER" property="userSex" />
+    <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+    <result column="user_idcard" jdbcType="VARCHAR" property="userIdcard" />
+    <result column="account_create_time" jdbcType="TIMESTAMP" property="accountCreateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    user_id, user_password, user_name, user_tel, user_mail, position, dept, user_state, 
+    user_birthday, user_sex, user_address, user_idcard, account_create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.bskms.bean.UserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bskms.bean.UserExample">
+    delete from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bskms.bean.User">
+    insert into user (user_id, user_password, user_name, 
+      user_tel, user_mail, position, 
+      dept, user_state, user_birthday, 
+      user_sex, user_address, user_idcard, 
+      account_create_time)
+    values (#{userId,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userTel,jdbcType=VARCHAR}, #{userMail,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, 
+      #{dept,jdbcType=VARCHAR}, #{userState,jdbcType=INTEGER}, #{userBirthday,jdbcType=DATE}, 
+      #{userSex,jdbcType=INTEGER}, #{userAddress,jdbcType=VARCHAR}, #{userIdcard,jdbcType=VARCHAR}, 
+      #{accountCreateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bskms.bean.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userPassword != null">
+        user_password,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userTel != null">
+        user_tel,
+      </if>
+      <if test="userMail != null">
+        user_mail,
+      </if>
+      <if test="position != null">
+        position,
+      </if>
+      <if test="dept != null">
+        dept,
+      </if>
+      <if test="userState != null">
+        user_state,
+      </if>
+      <if test="userBirthday != null">
+        user_birthday,
+      </if>
+      <if test="userSex != null">
+        user_sex,
+      </if>
+      <if test="userAddress != null">
+        user_address,
+      </if>
+      <if test="userIdcard != null">
+        user_idcard,
+      </if>
+      <if test="accountCreateTime != null">
+        account_create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null">
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userTel != null">
+        #{userTel,jdbcType=VARCHAR},
+      </if>
+      <if test="userMail != null">
+        #{userMail,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="userState != null">
+        #{userState,jdbcType=INTEGER},
+      </if>
+      <if test="userBirthday != null">
+        #{userBirthday,jdbcType=DATE},
+      </if>
+      <if test="userSex != null">
+        #{userSex,jdbcType=INTEGER},
+      </if>
+      <if test="userAddress != null">
+        #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userIdcard != null">
+        #{userIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCreateTime != null">
+        #{accountCreateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bskms.bean.UserExample" resultType="java.lang.Long">
+    select count(*) from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update user
+    <set>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userPassword != null">
+        user_password = #{record.userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userTel != null">
+        user_tel = #{record.userTel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userMail != null">
+        user_mail = #{record.userMail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.position != null">
+        position = #{record.position,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dept != null">
+        dept = #{record.dept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userState != null">
+        user_state = #{record.userState,jdbcType=INTEGER},
+      </if>
+      <if test="record.userBirthday != null">
+        user_birthday = #{record.userBirthday,jdbcType=DATE},
+      </if>
+      <if test="record.userSex != null">
+        user_sex = #{record.userSex,jdbcType=INTEGER},
+      </if>
+      <if test="record.userAddress != null">
+        user_address = #{record.userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userIdcard != null">
+        user_idcard = #{record.userIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountCreateTime != null">
+        account_create_time = #{record.accountCreateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update user
+    set user_id = #{record.userId,jdbcType=VARCHAR},
+      user_password = #{record.userPassword,jdbcType=VARCHAR},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      user_tel = #{record.userTel,jdbcType=VARCHAR},
+      user_mail = #{record.userMail,jdbcType=VARCHAR},
+      position = #{record.position,jdbcType=VARCHAR},
+      dept = #{record.dept,jdbcType=VARCHAR},
+      user_state = #{record.userState,jdbcType=INTEGER},
+      user_birthday = #{record.userBirthday,jdbcType=DATE},
+      user_sex = #{record.userSex,jdbcType=INTEGER},
+      user_address = #{record.userAddress,jdbcType=VARCHAR},
+      user_idcard = #{record.userIdcard,jdbcType=VARCHAR},
+      account_create_time = #{record.accountCreateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bskms.bean.User">
+    update user
+    <set>
+      <if test="userPassword != null">
+        user_password = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userTel != null">
+        user_tel = #{userTel,jdbcType=VARCHAR},
+      </if>
+      <if test="userMail != null">
+        user_mail = #{userMail,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null">
+        dept = #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="userState != null">
+        user_state = #{userState,jdbcType=INTEGER},
+      </if>
+      <if test="userBirthday != null">
+        user_birthday = #{userBirthday,jdbcType=DATE},
+      </if>
+      <if test="userSex != null">
+        user_sex = #{userSex,jdbcType=INTEGER},
+      </if>
+      <if test="userAddress != null">
+        user_address = #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userIdcard != null">
+        user_idcard = #{userIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCreateTime != null">
+        account_create_time = #{accountCreateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bskms.bean.User">
+    update user
+    set user_password = #{userPassword,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_tel = #{userTel,jdbcType=VARCHAR},
+      user_mail = #{userMail,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
+      dept = #{dept,jdbcType=VARCHAR},
+      user_state = #{userState,jdbcType=INTEGER},
+      user_birthday = #{userBirthday,jdbcType=DATE},
+      user_sex = #{userSex,jdbcType=INTEGER},
+      user_address = #{userAddress,jdbcType=VARCHAR},
+      user_idcard = #{userIdcard,jdbcType=VARCHAR},
+      account_create_time = #{accountCreateTime,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="countAllUserByRoleId"
+		parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM
+		`user` u
+		LEFT JOIN user_role ur ON ur.user_id = u.user_id
+		WHERE
+		ur.role_id = #{roleId,jdbcType=INTEGER}
+		and u.user_state != 9
+	</select>
+
+	<select id="getAllUserByRoleId"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		SELECT u.*
+		FROM `user` u
+		LEFT JOIN user_role ur ON ur.user_id =
+		u.user_id
+		WHERE ur.role_id = #{roleId,jdbcType=INTEGER}
+		and u.user_state
+		!= 9
+		ORDER BY u.account_create_time DESC
+		<if test="count!=null">
+			limit #{begin}, #{count}
+		</if>
+	</select>
+
+	<select id="countAllUserByNotRoleId"
+		parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM
+		`user` u
+		LEFT JOIN user_role ur ON ur.user_id = u.user_id
+		WHERE
+		ISNULL(ur.role_id)
+		and u.user_state != 9
+	</select>
+
+	<select id="getAllUserByNotRoleId"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		SELECT u.*
+		FROM `user` u
+		LEFT JOIN user_role ur ON ur.user_id =
+		u.user_id
+		WHERE ISNULL(ur.role_id)
+		and u.user_state != 9
+		ORDER BY
+		u.account_create_time DESC
+		<if test="count!=null">
+			limit #{begin}, #{count}
+		</if>
+	</select>
+
+
+	<sql id="user_condition">
+		<where>
+			<if test="userId!=null and userId!=''">
+				and user_id like concat('%',#{userId},'%')
+			</if>
+			<if test="userName!=null and userName!=''">
+				and user_name like concat('%',#{userName},'%')
+			</if>
+			<if test="position!=null and position!=''">
+				and position like concat('%',#{position},'%')
+			</if>
+			<if test="dept!=null and dept!=''">
+				and dept like concat('%',#{dept},'%')
+			</if>
+			<if test="userSex!=null and userSex!=-1">
+				and user_sex = #{userSex}
+			</if>
+			<if test="userState!=null and userState!=-1">
+				and user_state = #{userState}
+			</if>
+			and user_state IS NOT NULL
+		</where>
+	</sql>
+
+	<select id="getAllUserByLimit"
+		parameterType="com.bskms.model.UserParameter"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM `user`
+		<include refid="user_condition"></include>
+		and user_state != 9
+		ORDER BY account_create_time DESC
+		<if test="limit!=null">
+			limit #{page}, #{limit}
+		</if>
+	</select>
+
+	<select id="countAllUserByLimit"
+		parameterType="com.bskms.model.UserParameter" resultType="int">
+		SELECT COUNT(*)
+		FROM `user`
+		<include refid="user_condition"></include>
+		and user_state != 9
+	</select>
+
+	<select id="getAllDelUserByLimit"
+		parameterType="com.bskms.model.UserParameter"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM `user`
+		<include refid="user_condition"></include>
+		and user_state = 9
+		ORDER BY account_create_time DESC
+		<if test="limit!=null">
+			limit #{page}, #{limit}
+		</if>
+	</select>
+
+	<select id="countAllDelUserByLimit"
+		parameterType="com.bskms.model.UserParameter" resultType="int">
+		SELECT COUNT(*)
+		FROM user
+		<include refid="user_condition"></include>
+		and user_state = 9
+	</select>
+
+	<select id="getName" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT user_name
+		FROM user where user_id = #{userId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectAllTea" parameterType="com.bskms.model.UserParameter" resultMap="BaseResultMap">
+	 select * from user where user_state=1
+	</select>
+	<select id="selectAllUser" parameterType="com.bskms.model.UserParameter" resultMap="BaseResultMap">
+	 select * from user
+	</select>
+	
+	<select id="getBZR" parameterType="int" resultMap="BaseResultMap">
+		SELECT u.*
+		FROM user u
+		LEFT JOIN cla_tea ct
+		ON ct.tec_id = u.user_id
+		WHERE ct.class_id = #{classId,jdbcType=INTEGER}
+	</select>
+	<select id="selectAllJiazhang" parameterType="com.bskms.model.UserParameter" resultMap="BaseResultMap">
+		select * 
+		from user u
+		where u.user_state=2
+	</select>
+</mapper>

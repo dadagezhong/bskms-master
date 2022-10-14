@@ -1,0 +1,273 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>增加用户</title>
+<link type="text/css" rel="stylesheet" th:href="@{/css/page.css}" />
+<script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}" ></script>
+<!-- validation -->
+<script type="text/javascript" th:src="@{/js/jquery/jquery.validate.js}" ></script>
+<!-- layer -->
+<link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}" />
+<script type="text/javascript" th:src="@{/plug/layui/layui.js}"  charset="utf-8"></script>
+
+<link type="text/css" rel="stylesheet" th:href="@{/js/layer/skin/layer.css}"/>
+<script type="text/javascript" th:src="@{/js/layer/layer.js}" ></script>
+
+<style type="text/css">
+
+.need_span{
+	color: red;
+	display: none;
+}
+.need_0, .validation_span{
+	color: red;
+}
+.need_1{
+	color: #666666;
+}
+.input_0{
+	width: 200px;
+}
+.form_table td{
+	padding: 5px;
+}
+.text_ad_0{
+	font-weight: bold;
+	color: #444444;
+	white-space: nowrap;
+}
+</style>
+
+<script type="text/javascript"  th:inline="javascript">
+
+layui.use('laydate', function(){
+	  var laydate = layui.laydate;
+	  
+	  //执行一个laydate实例
+	  laydate.render({
+	    elem: '#userBirthday' //指定元素
+	  });
+});
+
+function getTime(val){
+	if(val){		
+		val = val.split("T");
+		return val[0]; 
+	}
+	return "";
+}
+	
+var managePay = [[${managePay}]];
+var tea = [[${tea}]];
+
+
+
+$(function(){
+	$(".re_password").hide();
+	
+	if(tea){
+		 for(var i=0;i<tea.length;i++){
+			$("#name").append("<option value='"+tea[i].userId+"'>"+tea[i].userName+"</option>");
+		 }
+	}
+	
+   	if(managePay){
+   		//修改
+   		$(".top_page_name").text("修改班级");
+   		
+   		//回填值
+   		console.log(managePay);
+   		$("#name option[value='"+managePay.name+"']").attr("selected","selected");
+   		$("#base").val(managePay.base);
+   		$("#overtime").val(managePay.overtime);
+   		$("#traffic").val(managePay.traffic);
+   		$("#meal").val(managePay.meal);
+   		$("#vacation").val(managePay.vacation);
+   		$("#bonus").val(managePay.bonus);
+   		$("#other").val(managePay.other);
+   		//$(":radio[name='userSex'][value='"+manageUser.userSex+"']").attr("checked", "checked");
+   	}
+	
+	//开始验证     
+	$('form').validate({
+		
+	    submitHandler: function (){
+	    	save();
+	    }
+	});
+	
+	//返回按钮
+	$("#backBtu").click(function(){
+		layer.confirm('确认返回吗？', {icon: 3, title:'提示'}, function(index){
+		    parent.layer.closeAll();
+		});
+	});
+});
+
+function closeSelf(){
+    var i = layer.getFrameIndex();
+	layer.close(i);
+}
+
+//保存
+function save(){
+	var param = new Object();
+	param.name = $.trim($("#name").val());
+	param.base = $.trim($("#base").val());
+	param.overtime = $.trim($("#overtime").val());
+	param.traffic = $.trim($("#traffic").val());
+	param.meal = $.trim($("#meal").val());
+	param.vacation = $.trim($("#vacation").val());
+	param.bonus = $.trim($("#bonus").val());
+	param.other = $.trim($("#other").val());
+	var urlStr = "/sa/addPay";
+	
+	if(managePay){
+		//修改
+		param.id = managePay.id
+		urlStr = "/sa/updatePay";
+		
+	}
+	if(param.name=="" || param.base==""){
+		layer.confirm('请填写必填项!', {icon: 2, title:'提示'});
+	}else{
+	
+	layer.confirm('确认保存吗？', {icon: 3, title:'提示'}, function(index){
+		$.ajax({
+    		type:"POST",
+    		async:true,  //默认true,异步
+    		data:param,
+    		url:urlStr,
+    		success:function(data){
+    			console.log(data);
+    			if(data == "SUCCESS"){
+    				layer.alert('保存成功！', {icon: 1}, function(indexOk){
+       					parent.search();
+       	    			parent.$("#add_iframe iframe").attr("src", "");
+       			    	parent.$("div").first().show();
+       			    	parent.$("#add_iframe").hide();
+       			    	parent.layer.closeAll();
+       				});
+    			}else if(data == "LGINOUT"){
+    				//重新登录
+    				parent.window.location.href = "/logout";    				
+    			}else{
+    				layer.alert('保存失败！', {icon: 2}, function(indexNo){
+    					parent.layer.closeAll();
+       				});
+    			}
+    	    }
+    	});
+	});
+	}
+}
+
+</script>
+</head>
+<body>
+<div  style="margin-left:15px; height: 400px;">
+<div class="first_div" style="border:none;">
+	<div id="adListDiv" align="left" >
+	<form>
+		<table class="form_table" style="border-collapse: collapse;margin-left:20px;margin-top:10px;">
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">教师：</span>
+				</td>
+				<td>
+					 <div class="layui-input-inline">
+					        <select id="name" name="name" lay-filter="name" lay-verify="required" lay-search="" class="layui-form">
+					         	<option value="" selected="selected">---请选择教师---</option>
+					        </select>
+		      		</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="need_0">*</span>
+					<span class="text_ad_0">基本工资：</span>
+				</td>
+				<td>
+					<input id="base" type="text" name="base" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="text_ad_0">加班工资：</span>
+				</td>
+				<td>
+					<input id="overtime" type="text" name="overtime" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="text_ad_0">交通补：</span>
+				</td>
+				<td>
+					<input id="traffic" type="text" name="traffic" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="text_ad_0">餐补：</span>
+				</td>
+				<td>
+					<input id="meal" type="text" name="meal" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="text_ad_0">节假日补：</span>
+				</td>
+				<td>
+					<input id="vacation" type="text" name="vacation" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="text_ad_0">绩效：</span>
+				</td>
+				<td>
+					<input id="bonus" type="text" name="bonus" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="right" >
+					<span class="text_ad_0">其他：</span>
+				</td>
+				<td>
+					<input id="other" type="text" name="other" class="input_0" />
+					<span class="validation_span"></span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="left" >
+					<div style="margin-top:10px;margin-bottom:20px;margin-left:120px;">
+						<input type="submit" class="layui-btn" lay-submit="" lay-filter="add" id="saveBtu" name="saveBtu" value="保存" style="" />
+						<input type="button" class="layui-btn" lay-submit="" lay-filter="add" id="backBtu" name="backBtu" value="返回" style="margin-left:20px;" />
+					</div>
+				</td>
+			</tr>
+		</table>
+	</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

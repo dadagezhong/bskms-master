@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bskms.mapper.ClaTeaMapper">
+  <resultMap id="BaseResultMap" type="com.bskms.bean.ClaTea">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="tec_id" jdbcType="VARCHAR" property="tecId" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="describe" jdbcType="VARCHAR" property="describe" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, class_id, tec_id, subject, `describe`
+  </sql>
+  <select id="selectByExample" parameterType="com.bskms.bean.ClaTeaExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cla_tea
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cla_tea
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cla_tea
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bskms.bean.ClaTeaExample">
+    delete from cla_tea
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bskms.bean.ClaTea">
+    insert into cla_tea (id, class_id, tec_id, 
+      subject, `describe`)
+    values (#{id,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER}, #{tecId,jdbcType=VARCHAR}, 
+      #{subject,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bskms.bean.ClaTea">
+    insert into cla_tea
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="classId != null">
+        class_id,
+      </if>
+      <if test="tecId != null">
+        tec_id,
+      </if>
+      <if test="subject != null">
+        subject,
+      </if>
+      <if test="describe != null">
+        `describe`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null">
+        #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="tecId != null">
+        #{tecId,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null">
+        #{describe,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bskms.bean.ClaTeaExample" resultType="java.lang.Long">
+    select count(*) from cla_tea
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update cla_tea
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.classId != null">
+        class_id = #{record.classId,jdbcType=INTEGER},
+      </if>
+      <if test="record.tecId != null">
+        tec_id = #{record.tecId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subject != null">
+        subject = #{record.subject,jdbcType=VARCHAR},
+      </if>
+      <if test="record.describe != null">
+        `describe` = #{record.describe,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update cla_tea
+    set id = #{record.id,jdbcType=INTEGER},
+      class_id = #{record.classId,jdbcType=INTEGER},
+      tec_id = #{record.tecId,jdbcType=VARCHAR},
+      subject = #{record.subject,jdbcType=VARCHAR},
+      `describe` = #{record.describe,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bskms.bean.ClaTea">
+    update cla_tea
+    <set>
+      <if test="classId != null">
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="tecId != null">
+        tec_id = #{tecId,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        subject = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null">
+        `describe` = #{describe,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bskms.bean.ClaTea">
+    update cla_tea
+    set class_id = #{classId,jdbcType=INTEGER},
+      tec_id = #{tecId,jdbcType=VARCHAR},
+      subject = #{subject,jdbcType=VARCHAR},
+      `describe` = #{describe,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getAllTeaByLimit" parameterType="com.bskms.bean.ClaTea" resultMap="BaseResultMap">
+    select t.*,c.name,u.user_name from cla_tea t
+    LEFT JOIN classes c on t.tec_id=c.bzr_id
+    LEFT JOIN user u on t.tec_id=u.user_id
+    where u.user_state=1
+     <if test="name!=null and name!=''">
+				and c.name like concat('%',#{name},'%')
+	</if>
+	<if test="userName!=null and userName!=''">
+				and u.user_name like concat('%',#{userName},'%')
+	</if>
+    <if test="limit!=null">
+			limit #{page}, #{limit}
+	</if>
+  </select>
+  <select id="countAllTeaByLimit" parameterType="com.bskms.bean.ClaTea" resultType="int">
+      select count(*) from cla_tea t
+      LEFT JOIN classes c on t.tec_id=c.bzr_id
+      LEFT JOIN user u on t.tec_id=u.user_id
+      where u.user_state=1
+     <if test="name!=null and name!=''">
+				and c.name like concat('%',#{name},'%')
+	</if>
+	<if test="userName!=null and userName!=''">
+				and u.user_name like concat('%',#{userName},'%')
+	</if>
+  </select>
+</mapper>
